@@ -21,13 +21,23 @@
  below or put a server.xml file in configDropins/overrides. Note: you may need to add Maven provided
  dependencies for use at compile time if not using app accelerator dependencies. -->
 
-    <!-- 
     <featureManager>
-        <feature><feature>
+        <feature>jdbc-4.1</feature>
+        <feature>jndi-1.0</feature>
     </featureManager>
-     -->
 
     <httpEndpoint httpPort="${default.http.port}" httpsPort="${default.https.port}"
         id="defaultHttpEndpoint" />
+
+    <library id="H2Lib">
+        <file name="/Users/jspeakma/code/h2-1.4.193.jar"/>
+    </library>
+
+    <dataSource id="DefaultDataSource" jndiName="jdbc/sample" type="javax.sql.DataSource">
+        <jdbcDriver libraryRef="H2Lib"
+                    javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource"/>
+        <connectionManager maxPoolSize="5"/>
+        <properties URL="jdbc:h2:mem:testDb"/>
+    </dataSource>
 
 </server>

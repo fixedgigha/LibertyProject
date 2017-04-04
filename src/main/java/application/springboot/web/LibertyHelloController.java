@@ -18,12 +18,33 @@ package application.springboot.web;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+import java.sql.Connection;
+
 @RestController
 public class LibertyHelloController {
 
     @RequestMapping("/springbootweb")
     public String hello() {
         return "Hello from Spring Boot MVC running on Liberty!";
+    }
+
+
+    @RequestMapping("/jim")
+    public String jim() {
+        StringBuilder sb = new StringBuilder("JNDI >>> <p>");
+        try {
+            InitialContext ctx = new InitialContext();
+            DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/sample");
+            try (Connection c = ds.getConnection()) {
+                sb.append(c.getMetaData().getDatabaseProductName());
+            }
+        }
+        catch (Exception e) {
+            sb.append(">>>>").append(e.getMessage());
+        }
+        return sb.toString();
     }
 
 }
